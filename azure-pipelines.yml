@@ -6,10 +6,10 @@
 trigger:
   - scafolding
   
-  pool:
+pool:
     vmImage: ubuntu-latest
   
-  steps:
+steps:
   - script: echo Hello, world!
     displayName: 'Run a one-line script'
   
