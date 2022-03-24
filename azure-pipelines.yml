@@ -26,3 +26,15 @@ steps:
     inputs:
       targetType: 'inline'
       script: 'aws --version'
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+          Set-AWSCredential `
+                           -AccessKey AKIA0123456787EXAMPLE `
+                           -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY `
+                           -StoreAs MyNewProfile
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: 'Get-AWSCredential -ListProfileDetail'
