@@ -29,11 +29,14 @@ steps:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: |
-          Set-AWSCredential `
-                           -AccessKey AKIA0123456787EXAMPLE `
+      script: 'Get-AWSCredential -ListProfileDetail'
+      
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: 'Set-AWSCredential -AccessKey AKIA0123456787EXAMPLE `
                            -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY `
-                           -StoreAs MyNewProfile
+                           -StoreAs MyNewProfile'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
