@@ -1,7 +1,8 @@
 $ListofModulesInstalled = (Get-InstalledModule).Name
 Write-Host "Checking if AWS.Tools.Installer is installed on this instance."
 
-Write-Host "List of installed modules: $ListofModulesInstalled"
+$ListofModulesInstalled
+
 if ($ListofModulesInstalled -contains "AWS.Tools.Installer")
 { 
     Write-Host "AWS.Tools.Installer module exists."
@@ -25,6 +26,6 @@ if ($ListofModulesInstalled -contains "AWS.Tools.Installer")
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     }
     Install-Module -Name AWS.Tools.Installer -Force
-    Install-Module -Name AWSPowerShell.Common -Force
+    Install-Module -Name AWS.Tools.Common -Force
     Write-Host "AWS.Tools.Installer was installed successfully."
 }
