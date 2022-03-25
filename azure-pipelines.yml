@@ -37,12 +37,12 @@ steps:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'value of secret: $(AccessKey)'
+      script: '"value of secret: $(AccessKey)"'
 
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'value of region: $(region)'
+      script: '"value of region: $(region)"'
               
   - task: PowerShell@2
     displayName: 'Set AWS Credentail'
