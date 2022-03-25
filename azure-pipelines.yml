@@ -2,6 +2,8 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
+variables:
+  -group: app-one
 
 trigger:
   - scafolding
@@ -25,16 +27,23 @@ steps:
       script: 'aws --version'
 
   - task: PowerShell@2
+    displayName: 'Verify docker version'
+    inputs:
+        targetType: 'inline'
+        script: 'docker --version'
+  
+  # this step is to check if the pipeline can access library variables
+  - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'Get-AWSCredential -ListProfileDetail'
+      script: 'value of secret: $(SecretKey)'
       
   - task: PowerShell@2
     displayName: 'Set AWS Credentail'
     inputs:
       targetType: 'inline'
-      script: 'Set-AWSCredential -AccessKey AKIA0123456787EXAMPLE `
-                -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY `
+      script: 'Set-AWSCredential -AccessKey $(AccessKey) `
+                -SecretKey $(SecretKey) `
                 -StoreAs MyNewProfile'
   - task: PowerShell@2
     inputs:
