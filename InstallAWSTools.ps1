@@ -1,5 +1,5 @@
 $ListofModulesInstalled = (Get-InstalledModule).Name
-Write-Host -Message "Ckecking if AWS.Tools.Installer is installed on this instance."
+Write-Host -Message "Checking if AWS.Tools.Installer is installed on this instance."
 if ($ListofModulesInstalled -contains "AWS.Tools.Installer")
 { 
     Write-Host -Message "AWS.Tools.Installer module exists."
@@ -9,7 +9,7 @@ if ($ListofModulesInstalled -contains "AWS.Tools.Installer")
     Write-Host -Message "AWS.Tools.Installer requires nuget package version 2.8.5.201 or above to be installed. Checking if correct version of nuget package is installed."
     if ($ListofPackagesInstalled -contains "Nuget")
     {
-        Write-Host -Message "Nuget package exists. Ckecking version."
+        Write-Host -Message "Nuget package exists. Checking version."
         $CheckNugetVersion=(get-PackageProvider -Name NuGet).Version
         if($CheckNugetVersion -ge "2.8.5.201")
         {
@@ -23,5 +23,6 @@ if ($ListofModulesInstalled -contains "AWS.Tools.Installer")
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     }
     Install-Module -Name AWS.Tools.Installer -Force
+    Install-Module -Name AWSPowerShell.NetCore -Force
     Write-Host -Message "AWS.Tools.Installer was installed successfully."
 }
