@@ -51,3 +51,14 @@ Write-Host "Checking if AWS.Tools.Common is installed on this instance."
         Install-Module -Name AWS.Tools.S3 -Force
         Write-Host "AWS.Tools.S3 was installed successfully."
     }
+
+# https://www.powershellgallery.com/packages/AWS.Tools.ecr/4.1.50
+Write-Host "Checking if AWS.Tools.ECR is installed on this instance."
+if ($ListofModulesInstalled -contains "AWS.Tools.ECR")
+{ 
+    Write-Host "AWS.Tools.ECR module exists."
+}else { 
+    Write-Host "AWS.Tools.ECR module does not exist and needs to be installed."
+    Install-Module -Name AWS.Tools.ECR -Force
+    Write-Host "AWS.Tools.ECR was installed successfully."
+}
