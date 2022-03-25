@@ -14,29 +14,28 @@ steps:
     displayName: 'Run a one-line script'
   
   - task: PowerShell@2
-    inputs:
-      filePath: 'InstallAWSTools.ps1'
-
-  - task: PowerShell@2
-    displayName: Check if tool is installed
+    displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
     inputs:
       filePath: 'InstallAWSTools.ps1'
   
   - task: PowerShell@2
+    displayName: 'Verify aws cli version'
     inputs:
       targetType: 'inline'
       script: 'aws --version'
+
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
       script: 'Get-AWSCredential -ListProfileDetail'
       
   - task: PowerShell@2
+    displayName: 'Set AWS Credentail'
     inputs:
       targetType: 'inline'
       script: 'Set-AWSCredential -AccessKey AKIA0123456787EXAMPLE `
-                           -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY `
-                           -StoreAs MyNewProfile'
+                -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY `
+                -StoreAs MyNewProfile'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
