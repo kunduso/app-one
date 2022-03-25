@@ -21,11 +21,11 @@ steps:
     inputs:
       filePath: 'InstallAWSTools.ps1'
   
-  - task: PowerShell@2
-    displayName: 'Verify aws cli version'
-    inputs:
-      targetType: 'inline'
-      script: 'aws --version'
+  # - task: PowerShell@2
+  #   displayName: 'Verify aws cli version'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'aws --version'
 
   # - task: PowerShell@2
   #   displayName: 'Verify docker version'
@@ -39,10 +39,10 @@ steps:
   #     targetType: 'inline'
   #     script: '"value of secret: $(App-One.AccessKey)"'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: '"value of region: $(region)"'
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: '"value of region: $(region)"'
               
   - task: PowerShell@2
     displayName: 'Set AWS Credentail'
@@ -50,7 +50,8 @@ steps:
       targetType: 'inline'
       script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
                 -SecretKey $(App-One.SecretKey) `
-                -StoreAs MyNewProfile'
+                -StoreAs AppOneProfile'
+
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
@@ -59,4 +60,10 @@ steps:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'Get-S3Bucket -ProfileName MyNewProfile | Where-Object {$_.BucketName -match "terraform"}'
+      script: 'Get-S3Bucket -ProfileName AppOneProfile | Where-Object {$_.BucketName -match "terraform"}'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: 'Remove-AWSCredentialProfile -ProfileName AppOneProfile -Force'
+    condition: always()
