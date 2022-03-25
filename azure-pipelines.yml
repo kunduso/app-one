@@ -48,8 +48,8 @@ steps:
     displayName: 'Set AWS Credentail'
     inputs:
       targetType: 'inline'
-      script: 'Set-AWSCredential -AccessKey $(AccessKey) `
-                -SecretKey $(SecretKey) `
+      script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
+                -SecretKey $(App-One.SecretKey) `
                 -StoreAs MyNewProfile'
   - task: PowerShell@2
     inputs:
