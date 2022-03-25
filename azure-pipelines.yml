@@ -36,8 +36,13 @@ steps:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'value of secret: $(SecretKey)'
-      
+      script: 'value of secret: $(AccessKey)'
+
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'value of secret: $(SecretKey)'
+              
   - task: PowerShell@2
     displayName: 'Set AWS Credentail'
     inputs:
