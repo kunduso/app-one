@@ -28,7 +28,6 @@ Write-Host "Checking if AWS.Tools.Installer is installed on this instance."
         Write-Host "AWS.Tools.Installer module exists."
     }else { 
         Write-Host "AWS.Tools.Installer module does not exist and needs to be installed."
-        
         Install-Module -Name AWS.Tools.Installer -Force
         Write-Host "AWS.Tools.Installer was installed successfully."
     }
@@ -38,6 +37,7 @@ Write-Host "Checking if AWS.Tools.Common is installed on this instance."
     { 
         Write-Host "AWS.Tools.Common module exists."
     }else { 
+        Write-Host "AWS.Tools.Common module does not exist and needs to be installed."
         Install-Module -Name AWS.Tools.Common -Force
         Write-Host "AWS.Tools.Common was installed successfully."
     }
