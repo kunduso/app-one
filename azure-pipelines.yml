@@ -16,10 +16,10 @@ steps:
   - script: echo Hello, world!
     displayName: 'Run a one-line script'
   
-  - task: PowerShell@2
-    displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
-    inputs:
-      filePath: 'InstallAWSTools.ps1'
+  # - task: PowerShell@2
+  #   displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
+  #   inputs:
+  #     filePath: 'InstallAWSTools.ps1'
   
   - task: PowerShell@2
     displayName: 'Verify aws cli version'
@@ -27,36 +27,36 @@ steps:
       targetType: 'inline'
       script: 'aws --version'
 
-  - task: PowerShell@2
-    displayName: 'Verify docker version'
-    inputs:
-        targetType: 'inline'
-        script: 'docker --version'
+  # - task: PowerShell@2
+  #   displayName: 'Verify docker version'
+  #   inputs:
+  #       targetType: 'inline'
+  #       script: 'docker --version'
   
-  # this step is to check if the pipeline can access library variables
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: '"value of secret: $(App-One.AccessKey)"'
+  # # this step is to check if the pipeline can access library variables
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: '"value of secret: $(App-One.AccessKey)"'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: '"value of region: $(region)"'
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: '"value of region: $(region)"'
               
-  - task: PowerShell@2
-    displayName: 'Set AWS Credentail'
-    inputs:
-      targetType: 'inline'
-      script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
-                -SecretKey $(App-One.SecretKey) `
-                -StoreAs MyNewProfile'
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: 'Get-AWSCredential -ListProfileDetail'
+  # - task: PowerShell@2
+  #   displayName: 'Set AWS Credentail'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
+  #               -SecretKey $(App-One.SecretKey) `
+  #               -StoreAs MyNewProfile'
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'Get-AWSCredential -ListProfileDetail'
 
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: 'Get-S3Bucket -ProfileName MyNewProfile'
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'Get-S3Bucket -ProfileName MyNewProfile'
