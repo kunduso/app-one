@@ -61,7 +61,7 @@ steps:
     displayName: 'Docker login'
     inputs:
       targetType: 'inline'
-      script: '(Get-ECRLoginCommand -ProfileName MyNewProfile -Region us-east-2).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.us-east-2.amazonaws.com'
+      script: '(Get-ECRLoginCommand -ProfileName AppOneProfile -Region us-east-2).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.us-east-2.amazonaws.com'
   
   - task: PowerShell@2
     displayName: 'Build docker image'
