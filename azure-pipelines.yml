@@ -63,6 +63,7 @@ steps:
       script: 'Get-S3Bucket -ProfileName AppOneProfile | Where-Object {$_.BucketName -match "terraform"}'
 
   - task: PowerShell@2
+    displayName: 'Remove AWS Credentail'
     inputs:
       targetType: 'inline'
       script: 'Remove-AWSCredentialProfile -ProfileName AppOneProfile -Force'
