@@ -58,9 +58,32 @@ steps:
       script: 'Get-AWSCredential -ListProfileDetail'
 
   - task: PowerShell@2
+    displayName: 'Docker login'
     inputs:
       targetType: 'inline'
-      script: 'Get-S3Bucket -ProfileName AppOneProfile | Where-Object {$_.BucketName -match "terraform"}'
+      script: '(Get-ECRLoginCommand -ProfileName MyNewProfile -Region us-east-2).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.us-east-2.amazonaws.com'
+  
+  - task: PowerShell@2
+    displayName: 'Build docker image'
+    inputs:
+      targetType: 'inline'
+      script: 'docker build -t app-one .'
+
+  - task: PowerShell@2
+    displayName: 'Tag docker image'
+    inputs:
+      targetType: 'inline'
+      script: 'docker tag app-one:latest 635656952828.dkr.ecr.us-east-2.amazonaws.com/app-one:latest'
+
+  - task: PowerShell@2
+    displayName: 'Push docker image to ECR'
+    inputs:
+      targetType: 'inline'
+      script: 'docker push 635656952828.dkr.ecr.us-east-2.amazonaws.com/app-one:latest'
+  # - task: PowerShell@2
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'Get-S3Bucket -ProfileName AppOneProfile | Where-Object {$_.BucketName -match "terraform"}'
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
