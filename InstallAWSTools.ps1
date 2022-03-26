@@ -42,15 +42,15 @@ Write-Host "Checking if AWS.Tools.Common is installed on this instance."
         Write-Host "AWS.Tools.Common was installed successfully."
     }
 # https://www.powershellgallery.com/packages/AWS.Tools.s3/4.1.50
-    Write-Host "Checking if AWS.Tools.S3 is installed on this instance."
-    if ($ListofModulesInstalled -contains "AWS.Tools.S3")
-    { 
-        Write-Host "AWS.Tools.S3 module exists."
-    }else { 
-        Write-Host "AWS.Tools.S3 module does not exist and needs to be installed."
-        Install-Module -Name AWS.Tools.S3 -Force
-        Write-Host "AWS.Tools.S3 was installed successfully."
-    }
+    # Write-Host "Checking if AWS.Tools.S3 is installed on this instance."
+    # if ($ListofModulesInstalled -contains "AWS.Tools.S3")
+    # { 
+    #     Write-Host "AWS.Tools.S3 module exists."
+    # }else { 
+    #     Write-Host "AWS.Tools.S3 module does not exist and needs to be installed."
+    #     Install-Module -Name AWS.Tools.S3 -Force
+    #     Write-Host "AWS.Tools.S3 was installed successfully."
+    # }
 
 # https://www.powershellgallery.com/packages/AWS.Tools.ecr/4.1.50
 Write-Host "Checking if AWS.Tools.ECR is installed on this instance."

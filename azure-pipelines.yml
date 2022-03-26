@@ -20,30 +20,13 @@ steps:
     displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
     inputs:
       filePath: 'InstallAWSTools.ps1'
-  
-  # - task: PowerShell@2
-  #   displayName: 'Verify aws cli version'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'aws --version'
 
   # - task: PowerShell@2
   #   displayName: 'Verify docker version'
   #   inputs:
   #       targetType: 'inline'
   #       script: 'docker --version'
-  
-  # # this step is to check if the pipeline can access library variables
-  # - task: PowerShell@2
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: '"value of secret: $(App-One.AccessKey)"'
 
-  # - task: PowerShell@2
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: '"value of region: $(region)"'
-              
   - task: PowerShell@2
     displayName: 'Set AWS Credentail'
     inputs:
@@ -61,7 +44,7 @@ steps:
     displayName: 'Docker login'
     inputs:
       targetType: 'inline'
-      script: '(Get-ECRLoginCommand -ProfileName AppOneProfile -Region us-east-2).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.us-east-2.amazonaws.com'
+      script: '(Get-ECRLoginCommand -ProfileName AppOneProfile -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
   
   - task: PowerShell@2
     displayName: 'Build docker image'
@@ -73,17 +56,13 @@ steps:
     displayName: 'Tag docker image'
     inputs:
       targetType: 'inline'
-      script: 'docker tag app-one:latest 635656952828.dkr.ecr.us-east-2.amazonaws.com/app-one:latest'
+      script: 'docker tag app-one:latest 635656952828.dkr.ecr.$(region).amazonaws.com/app-one:latest'
 
   - task: PowerShell@2
     displayName: 'Push docker image to ECR'
     inputs:
       targetType: 'inline'
-      script: 'docker push 635656952828.dkr.ecr.us-east-2.amazonaws.com/app-one:latest'
-  # - task: PowerShell@2
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'Get-S3Bucket -ProfileName AppOneProfile | Where-Object {$_.BucketName -match "terraform"}'
+      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/app-one:latest'
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
