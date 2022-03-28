@@ -17,61 +17,61 @@ pool:
     vmImage: ubuntu-latest
   
 steps:
+  - task: PowerShell@2
+    displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
+    inputs:
+      filePath: 'InstallAWSTools.ps1'
+
   # - task: PowerShell@2
-  #   displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
+  #   displayName: 'Build Number'
   #   inputs:
-  #     filePath: 'InstallAWSTools.ps1'
+  #       targetType: 'inline'
+  #       script: 'Write-Host "BuildNumber: $(Build.BuildNumber)"'
 
   - task: PowerShell@2
-    displayName: 'Build Number'
+    displayName: 'Set AWS Credentail'
     inputs:
-        targetType: 'inline'
-        script: 'Write-Host "BuildNumber: $(Build.BuildNumber)"'
+      targetType: 'inline'
+      script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
+                -SecretKey $(App-One.SecretKey) `
+                -StoreAs $(profile)'
 
-  # - task: PowerShell@2
-  #   displayName: 'Set AWS Credentail'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
-  #               -SecretKey $(App-One.SecretKey) `
-  #               -StoreAs $(profile)'
+  - task: PowerShell@2
+    displayName: 'Check if Amazon ECR repository exists'
+    inputs:
+      targetType: 'inline'
+      script: |
+        if ("$(erc_repo_name)" -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc_repo_name)"}).RepositoryName)
+        {
+          Write-Host "Repository $(erc_repo_name) does not exist, and will be created."
+          New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc_repo_name) -Select ^RepositoryName
+        } else {
+          Write-Host "Repository $(erc_repo_name) already exists."
+        }
 
-  # - task: PowerShell@2
-  #   displayName: 'Check if Amazon ECR repository exists'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       if ("$(erc_repo_name)" -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc_repo_name)"}).RepositoryName)
-  #       {
-  #         Write-Host "Repository $(erc_repo_name) does not exist, and will be created."
-  #         New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc_repo_name) -Select ^RepositoryName
-  #       } else {
-  #         Write-Host "Repository $(erc_repo_name) already exists."
-  #       }
-
-  # - task: PowerShell@2
-  #   displayName: 'Docker login'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: '(Get-ECRLoginCommand -ProfileName $(profile) -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
+  - task: PowerShell@2
+    displayName: 'Docker login'
+    inputs:
+      targetType: 'inline'
+      script: '(Get-ECRLoginCommand -ProfileName $(profile) -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
   
-  # - task: PowerShell@2
-  #   displayName: 'Build docker image'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'docker build -t $(erc-repo-name) .'
+  - task: PowerShell@2
+    displayName: 'Build docker image'
+    inputs:
+      targetType: 'inline'
+      script: 'docker build -t $(erc-repo-name):$(Build.BuildNumber) .'
 
-  # - task: PowerShell@2
-  #   displayName: 'Tag docker image'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'docker tag $(erc-repo-name):latest 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):latest'
+  - task: PowerShell@2
+    displayName: 'Tag docker image'
+    inputs:
+      targetType: 'inline'
+      script: 'docker tag $(erc-repo-name):$(Build.BuildNumber) 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):$(Build.BuildNumber)'
 
-  # - task: PowerShell@2
-  #   displayName: 'Push docker image to ECR'
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):latest'
+  - task: PowerShell@2
+    displayName: 'Push docker image to ECR'
+    inputs:
+      targetType: 'inline'
+      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):$(Build.BuildNumber)'
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
