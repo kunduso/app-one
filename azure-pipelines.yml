@@ -41,9 +41,9 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        if ($(erc_repo_name) -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc-repo-name)"}).RepositoryName)
+        if ($(erc_repo_name) -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc_repo_name)"}).RepositoryName)
         {
-          New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc-repo-name) -Select ^RepositoryName
+          New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc_repo_name) -Select ^RepositoryName
         } else {
           Write-Host "Repository $(erc_repo_name) already exists."
         }
