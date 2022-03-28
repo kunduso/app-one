@@ -59,19 +59,19 @@ steps:
     displayName: 'Build docker image'
     inputs:
       targetType: 'inline'
-      script: 'docker build -t $(erc-repo-name):$(Build.BuildNumber) .'
+      script: 'docker build -t $(erc_repo_name):$(Build.BuildNumber) .'
 
   - task: PowerShell@2
     displayName: 'Tag docker image'
     inputs:
       targetType: 'inline'
-      script: 'docker tag $(erc-repo-name):$(Build.BuildNumber) 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):$(Build.BuildNumber)'
+      script: 'docker tag $(erc_repo_name):$(Build.BuildNumber) 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
 
   - task: PowerShell@2
     displayName: 'Push docker image to ECR'
     inputs:
       targetType: 'inline'
-      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):$(Build.BuildNumber)'
+      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
