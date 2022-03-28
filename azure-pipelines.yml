@@ -6,6 +6,10 @@ variables:
   - group: app-one
   - name: region
     value: 'us-east-2'
+  - name: erc-repo-name
+    value: 'app-one'
+  - name: profile
+    value: 'AppOneProfile'
 trigger:
   - scafolding
   
@@ -13,9 +17,6 @@ pool:
     vmImage: ubuntu-latest
   
 steps:
-  - script: echo Hello, world!
-    displayName: 'Run a one-line script'
-  
   - task: PowerShell@2
     displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
     inputs:
@@ -33,40 +34,46 @@ steps:
       targetType: 'inline'
       script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
                 -SecretKey $(App-One.SecretKey) `
-                -StoreAs AppOneProfile'
+                -StoreAs $(profile)'
 
   - task: PowerShell@2
+    displayName: 'Check if Amazon ECR repository exists'
     inputs:
       targetType: 'inline'
-      script: 'Get-AWSCredential -ListProfileDetail'
-
-  - task: PowerShell@2
-    displayName: 'Docker login'
-    inputs:
-      targetType: 'inline'
-      script: '(Get-ECRLoginCommand -ProfileName AppOneProfile -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
+      script: |
+        if ($RepositoryName -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq $(erc-repo-name)}).RepositoryName)
+        {
+          New-ECRRepository -ImageScanningConfiguration_ScanOnPush true -ImageTagMutability true -ProfileName $(profile) -Region $(region) -RepositoryName $(erc-repo-name)
+        } else {
+          Write-Host "Repository $(erc-repo-name) already exists."
+        }
+  # - task: PowerShell@2
+  #   displayName: 'Docker login'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: '(Get-ECRLoginCommand -ProfileName $(profile) -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
   
-  - task: PowerShell@2
-    displayName: 'Build docker image'
-    inputs:
-      targetType: 'inline'
-      script: 'docker build -t app-one .'
+  # - task: PowerShell@2
+  #   displayName: 'Build docker image'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'docker build -t $(erc-repo-name) .'
 
-  - task: PowerShell@2
-    displayName: 'Tag docker image'
-    inputs:
-      targetType: 'inline'
-      script: 'docker tag app-one:latest 635656952828.dkr.ecr.$(region).amazonaws.com/app-one:latest'
+  # - task: PowerShell@2
+  #   displayName: 'Tag docker image'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'docker tag $(erc-repo-name):latest 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):latest'
 
-  - task: PowerShell@2
-    displayName: 'Push docker image to ECR'
-    inputs:
-      targetType: 'inline'
-      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/app-one:latest'
+  # - task: PowerShell@2
+  #   displayName: 'Push docker image to ECR'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc-repo-name):latest'
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
     inputs:
       targetType: 'inline'
-      script: 'Remove-AWSCredentialProfile -ProfileName AppOneProfile -Force'
+      script: 'Remove-AWSCredentialProfile -ProfileName $(profile) -Force'
     condition: always()
