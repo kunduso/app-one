@@ -7,7 +7,7 @@ variables:
   - name: region
     value: 'us-east-2'
   - name: erc_repo_name
-    value: 'app-two'
+    value: 'app-one'
   - name: profile
     value: 'AppOneProfile'
 trigger:
@@ -17,36 +17,38 @@ pool:
     vmImage: ubuntu-latest
   
 steps:
+  # - task: PowerShell@2
+  #   displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
+  #   inputs:
+  #     filePath: 'InstallAWSTools.ps1'
+
   - task: PowerShell@2
-    displayName: 'Check and install AWS.Tools.Installer and AWS.Tools.Common modules'
+    displayName: 'Build Number'
     inputs:
-      filePath: 'InstallAWSTools.ps1'
+        targetType: 'inline'
+        script: 'Write-Host "BuildNumber: $(Build.BuildNumber)"'
 
   # - task: PowerShell@2
-  #   displayName: 'Verify docker version'
+  #   displayName: 'Set AWS Credentail'
   #   inputs:
-  #       targetType: 'inline'
-  #       script: 'docker --version'
+  #     targetType: 'inline'
+  #     script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
+  #               -SecretKey $(App-One.SecretKey) `
+  #               -StoreAs $(profile)'
 
-  - task: PowerShell@2
-    displayName: 'Set AWS Credentail'
-    inputs:
-      targetType: 'inline'
-      script: 'Set-AWSCredential -AccessKey $(App-One.AccessKey) `
-                -SecretKey $(App-One.SecretKey) `
-                -StoreAs $(profile)'
+  # - task: PowerShell@2
+  #   displayName: 'Check if Amazon ECR repository exists'
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       if ("$(erc_repo_name)" -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc_repo_name)"}).RepositoryName)
+  #       {
+  #         Write-Host "Repository $(erc_repo_name) does not exist, and will be created."
+  #         New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc_repo_name) -Select ^RepositoryName
+  #       } else {
+  #         Write-Host "Repository $(erc_repo_name) already exists."
+  #       }
 
-  - task: PowerShell@2
-    displayName: 'Check if Amazon ECR repository exists'
-    inputs:
-      targetType: 'inline'
-      script: |
-        if ("$(erc_repo_name)" -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc_repo_name)"}).RepositoryName)
-        {
-          New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc_repo_name) -Select ^RepositoryName
-        } else {
-          Write-Host "Repository $(erc_repo_name) already exists."
-        }
   # - task: PowerShell@2
   #   displayName: 'Docker login'
   #   inputs:
