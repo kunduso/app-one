@@ -6,7 +6,7 @@ variables:
   - group: app-one
   - name: region
     value: 'us-east-2'
-  - name: erc-repo-name
+  - name: erc_repo_name
     value: 'app-one'
   - name: profile
     value: 'AppOneProfile'
@@ -41,11 +41,11 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        if ($RepositoryName -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc-repo-name)"}).RepositoryName)
+        if ($(erc_repo_name) -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc-repo-name)"}).RepositoryName)
         {
-          New-ECRRepository -ImageScanningConfiguration_ScanOnPush true -ImageTagMutability true -ProfileName $(profile) -Region $(region) -RepositoryName $(erc-repo-name)
+          New-ECRRepository -ImageScanningConfiguration_ScanOnPush 1 -ImageTagMutability 'MUTABLE' -ProfileName $(profile) -Region $(region) -RepositoryName $(erc-repo-name) -Select ^RepositoryName
         } else {
-          Write-Host "Repository $(erc-repo-name) already exists."
+          Write-Host "Repository $(erc_repo_name) already exists."
         }
   # - task: PowerShell@2
   #   displayName: 'Docker login'
