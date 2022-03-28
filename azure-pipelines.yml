@@ -41,7 +41,7 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        if ($RepositoryName -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq $(erc-repo-name)}).RepositoryName)
+        if ($RepositoryName -ne ((Get-ECRRepository -ProfileName $(profile) -Region $(region)) | where-object {$_.RepositoryName -eq "$(erc-repo-name)"}).RepositoryName)
         {
           New-ECRRepository -ImageScanningConfiguration_ScanOnPush true -ImageTagMutability true -ProfileName $(profile) -Region $(region) -RepositoryName $(erc-repo-name)
         } else {
