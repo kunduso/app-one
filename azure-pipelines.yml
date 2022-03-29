@@ -55,7 +55,8 @@ steps:
     displayName: 'Docker login'
     inputs:
       targetType: 'inline'
-      script: '(Get-ECRLoginCommand -ProfileName $(profile) -Region $(region)).Password | docker login --username AWS --password-stdin 635656952828.dkr.ecr.$(region).amazonaws.com'
+      script: '(Get-ECRLoginCommand -ProfileName $(profile) -Region $(region)).Password `
+      | docker login --username AWS --password-stdin $(aws_account_number).dkr.ecr.$(region).amazonaws.com'
   
   - task: PowerShell@2
     displayName: 'Build docker image'
@@ -67,13 +68,23 @@ steps:
     displayName: 'Tag docker image'
     inputs:
       targetType: 'inline'
-      script: 'docker tag $(erc_repo_name):$(Build.BuildNumber) 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
+      script: 'docker tag $(erc_repo_name):$(Build.BuildNumber) `
+      $(aws_account_number).dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
 
   - task: PowerShell@2
     displayName: 'Push docker image to ECR'
     inputs:
       targetType: 'inline'
-      script: 'docker push 635656952828.dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
+      script: 'docker push `
+      $(aws_account_number).dkr.ecr.$(region).amazonaws.com/$(erc_repo_name):$(Build.BuildNumber)'
+
+  #https://docs.docker.com/engine/reference/commandline/login/#credential-helpers
+  - task: PowerShell@2
+    displayName: 'Docker logout'
+    inputs:
+      targetType: 'inline'
+      script: 'docker logout'
+    condition: always()
 
   - task: PowerShell@2
     displayName: 'Remove AWS Credentail'
