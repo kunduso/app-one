@@ -13,5 +13,7 @@ When it comes to identifying a process to deliver continuous value to customers,
 ## Prerequisites
 There are a couple of pre-requisites to this process - an IAM user with permission to push images to the Amazon ECR image repository and the image repository to host the image.
 ## Usage
-Ensure that the IAM user whose credentials are being used in this configuration has permission to create and manage all the resources that are included in this repository. For more details, refer to my note: [Push Docker images to Amazon ECR using Azure Pipelines and AWS Tools for PowerShell.](https://skundunotes.com/2022/03/30/push-docker-images-to-amazon-ecr-using-yaml-based-azure-pipelines/)
-<br />Click on the build badge `Azure Pipelines` at the top to navigate to the Azure DevOps build log.
+Ensure that the IAM user whose credentials are being used in this configuration has permission to create and manage all the resources that are included in this repository. I have the policy file in the location `\iam-policy\iam-policy.json` that can be associated with the IAM user. Please update the `$(aws_account_number)` in the policy file before creating an IAM policy.
+<br />Create an Azure DevOps Library variable group and store `App-One.AccessKey`, `App-One.SecretKey`, and `aws_account_number` securely. To read how to do that, refer to my note - [Manage secure variables with Azure DevOps Library and Azure Pipelines](http://skundunotes.com/2022/03/30/manage-secure-variables-with-azure-devops-library-and-azure-pipelines/).
+<br /><br />For more details, refer to my note: [Push Docker images to Amazon ECR using Azure Pipelines and AWS Tools for PowerShell.](https://skundunotes.com/2022/03/30/push-docker-images-to-amazon-ecr-using-yaml-based-azure-pipelines/)
+<br /><br />Click on the build badge `Azure Pipelines` at the top to navigate to the Azure DevOps build log.
