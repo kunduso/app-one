@@ -7,7 +7,11 @@ When it comes to identifying a process to deliver continuous value to customers,
 <br />**Step 2:** create and tag a docker image that contains the application (or executable) and all dependencies.
 <br />**Step 3:** upload the docker image into an image repository, and
 <br />**Step 4:** create a container out of the image that is stored in the image repository
+<br />
+<br />In this GitHub repository you will find all the information required to create your own CI-CD process using Azure DevOps to push a docker image into an Amazon ECR repository.
+
 ## Prerequisites
 There are a couple of pre-requisites to this process - an IAM user with permission to push images to the Amazon ECR image repository and the image repository to host the image.
 ## Usage
 Ensure that the IAM user whose credentials are being used in this configuration has permission to create and manage all the resources that are included in this repository. For more details, refer to my note: [Push Docker images to Amazon ECR using Azure Pipelines and AWS Tools for PowerShell.](https://skundunotes.com/2022/03/30/push-docker-images-to-amazon-ecr-using-yaml-based-azure-pipelines/)
+<br />Click on the build badge `Azure Pipelines` at the top to navigate to the Azure DevOps build log.
