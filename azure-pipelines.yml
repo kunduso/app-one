@@ -12,7 +12,6 @@ variables:
     value: 'AppOneProfile'
 trigger:
   - main
-  - scafolding
   
 pool:
     vmImage: ubuntu-latest
